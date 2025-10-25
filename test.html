@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dubai Traffic Incidents – Part 2</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+      line-height: 1.6;
+      color: #1a202c;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Hero Section with Animation */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+      color: white;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      letter-spacing: -1px;
+    }
+
+    .hero .subtitle {
+      font-size: 1.35rem;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto 10px;
+      font-weight: 300;
+    }
+
+    .hero .course-info {
+      font-size: 1rem;
+      opacity: 0.85;
+      font-weight: 500;
+      margin-top: 15px;
+      padding: 12px 24px;
+      background: rgba(255,255,255,0.15);
+      display: inline-block;
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      padding: 30px 20px;
+      text-align: center;
+      color: white;
+      animation: fadeIn 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .stat-item {
+      animation: scaleIn 0.6s ease-out both;
+    }
+
+    .stat-item:nth-child(1) { animation-delay: 0.4s; }
+    .stat-item:nth-child(2) { animation-delay: 0.5s; }
+    .stat-item:nth-child(3) { animation-delay: 0.6s; }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    /* Content Section */
+    .content {
+      background: #f7fafc;
+      border-radius: 30px 30px 0 0;
+      margin-top: 50px;
+      padding: 70px 0;
+      box-shadow: 0 -10px 50px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    /* Section Header */
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      font-size: 1.15rem;
+      color: #4a5568;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Visualization Cards */
+    .viz-section {
+      margin-bottom: 70px;
+      animation: fadeInUp 0.8s ease-out both;
+    }
+
+    .viz-section:nth-child(2) { animation-delay: 0.2s; }
+    .viz-section:nth-child(3) { animation-delay: 0.4s; }
+    .viz-section:nth-child(4) { animation-delay: 0.6s; }
+
+    .viz-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border: 2px solid #e2e8f0;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .viz-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .viz-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      border-color: #cbd5e0;
+    }
+
+    .viz-header {
+      margin-bottom: 35px;
+    }
+
+    .viz-title-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .viz-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .viz-header h3 {
+      font-size: 2rem;
+      color: #1a202c;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .task-badge {
+      padding: 6px 16px;
+      background: #edf2f7;
+      color: #4a5568;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .viz-description {
+      color: #4a5568;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .viz-requirements {
+      background: #f7fafc;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 16px;
+      border-left: 4px solid #667eea;
+    }
+
+    .viz-requirements h4 {
+      font-size: 1rem;
+      color: #2d3748;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .viz-requirements ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .viz-requirements li {
+      color: #4a5568;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .viz-requirements li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #48bb78;
+      font-weight: 700;
+    }
+
+    .chart-container {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 30px;
+      margin-top: 30px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid #e2e8f0;
+    }
+
+    .chart {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 50px 20px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .footer p {
+      opacity: 0.95;
+      margin-bottom: 8px;
+    }
+
+    .footer .copyright {
+      opacity: 0.75;
+      font-size: 0.9rem;
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e2e8f0;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero .subtitle {
+        font-size: 1.1rem;
+      }
+
+      .viz-card {
+        padding: 30px 20px;
+      }
+
+      .viz-header h3 {
+        font-size: 1.5rem;
+      }
+
+      .viz-title-row {
+        flex-wrap: wrap;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="container">
+      <h1>🚗 Dubai Traffic Incidents Analysis</h1>
+      <p class="subtitle">Comprehensive data visualization exploring traffic accident patterns, temporal trends, and geographic distribution across Dubai Emirate</p>
+      <div class="course-info"> • Part 2: Using Vega-Lite</div>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">3</span>
+        <span class="stat-label">Visualizations</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">Vega-Lite</span>
+        <span class="stat-label">Technology Used</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">Dubai</span>
+        <span class="stat-label">Dataset Source</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div class="container">
+
+      <!-- Section Header -->
+      <div class="section-header">
+        <h2>Interactive Visualizations</h2>
+        <p>Explore traffic incident data through three distinct visualization approaches, each revealing unique patterns and insights</p>
+      </div>
+
+      <!-- Visualization 1 -->
+      <div class="viz-section">
+        <div class="viz-card">
+          <div class="viz-header">
+            <div class="viz-title-row">
+              <span class="viz-number">1</span>
+              <h3>Accidents by Day of Week</h3>
+              <span class="task-badge">Task 1</span>
+            </div>
+            <p class="viz-description">
+              This bar chart visualizes the distribution of traffic accidents across different days of the week in Dubai. 
+              The visualization reveals weekly patterns, helping identify which days experience higher accident frequencies. 
+              Each bar is color-coded to distinguish between days, making it easy to compare accident counts at a glance.
+            </p>
+            <div class="viz-requirements">
+              <h4>📋 Assignment Requirements Met:</h4>
+              <ul>
+                <li>Bar chart showing accidents per day of week</li>
+                <li>Days properly ordered from Monday to Sunday</li>
+                <li>Color encoding to distinguish different days</li>
+                <li>Clear axis labels and proper scaling</li>
+                <li>Interactive tooltips showing exact counts</li>
+              </ul>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div id="task1" class="chart"><div class="loading"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visualization 2 -->
+      <div class="viz-section">
+        <div class="viz-card">
+          <div class="viz-header">
+            <div class="viz-title-row">
+              <span class="viz-number">2</span>
+              <h3>Accidents by Hour, Colored by Weekday</h3>
+              <span class="task-badge">Task 2</span>
+            </div>
+            <p class="viz-description">
+              This multi-line chart reveals how accident frequency varies throughout the 24-hour day, with separate lines for 
+              each day of the week. The visualization exposes temporal patterns including rush hour peaks, late-night trends, 
+              and distinct differences between weekdays and weekends. The color-coded lines enable easy comparison across days.
+            </p>
+            <div class="viz-requirements">
+              <h4>📋 Assignment Requirements Met:</h4>
+              <ul>
+                <li>Line chart showing hourly accident distribution</li>
+                <li>All 24 hours included on x-axis (0-23)</li>
+                <li>Separate colored lines for each day of week</li>
+                <li>Clear temporal patterns visible</li>
+                <li>Interactive points with detailed tooltips</li>
+              </ul>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div id="task2" class="chart"><div class="loading"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visualization 3 -->
+      <div class="viz-section">
+        <div class="viz-card">
+          <div class="viz-header">
+            <div class="viz-title-row">
+              <span class="viz-number">3</span>
+              <h3>Accident Density Across Dubai</h3>
+              <span class="task-badge">Task 3</span>
+            </div>
+            <p class="viz-description">
+              This graduated symbol map displays the geographic distribution and density of traffic accidents throughout Dubai. 
+              Circles vary in both size and color intensity based on accident concentration, effectively highlighting high-risk 
+              zones and traffic hotspots. The map overlays accident data on Dubai's geographic boundary, providing crucial 
+              spatial context for urban planning and traffic safety analysis.
+            </p>
+            <div class="viz-requirements">
+              <h4>📋 Assignment Requirements Met:</h4>
+              <ul>
+                <li>Graduated symbol visualization with circle marks</li>
+                <li>Geographic coordinates properly mapped (longitude/latitude encoding)</li>
+                <li>Data filtered to exclude noise (acci_y > 23)</li>
+                <li>Circle opacity set to 0.2 for density visibility</li>
+                <li>Size and color scales represent accident frequency</li>
+                <li>Dubai boundary overlay for geographic context</li>
+              </ul>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div id="task3" class="chart"><div class="loading"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="container">
+      <p><strong>Done by Saif,Mohammed,Mohammed,Abdulaziz,Ali 
+</strong></p>
+      <p>Assignment Part 2: Traffic Incident Analysis Using Vega-Lite</p>
+      <p class="copyright">Data Source: Dubai Emirate Traffic Incidents Dataset</p>
+    </div>
+  </div>
+
+<script>
+const DATA_URL = "https://raw.githubusercontent.com/sheriefAbdallah/CS318/refs/heads/main/Traffic_Incidents.csv";
+
+/* -------- Task 1: Bar chart by weekday -------- */
+const spec1 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  description: "Accident distribution by day of the week",
+  width: 900,
+  height: 320,
+  data: {
+    url: DATA_URL,
+    format: { type: "csv", parse: { acci_time: "date:'%d/%m/%Y %H:%M:%S'" } }
+  },
+  mark: "bar",
+  encoding: {
+    x: {
+      timeUnit: "day",
+      field: "acci_time",
+      type: "ordinal",
+      title: "Day of Week",
+      sort: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      axis: { labelAngle: 0 }
+    },
+    y: { aggregate: "count", title: "Number of Accidents" },
+    color: {
+      timeUnit: "day",
+      field: "acci_time",
+      type: "nominal",
+      title: "Day",
+      scale: { domain: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"] }
+    },
+    tooltip: [
+      { aggregate: "count", title: "Accidents" },
+      { timeUnit: "day", field: "acci_time", type: "ordinal", title: "Day" }
+    ]
+  }
+};
+
+/* -------- Task 2: Line chart by hour, colored by weekday -------- */
+const spec2 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  description: "Accident distribution by hour of day, colored by weekday",
+  width: 1000,
+  height: 340,
+  data: {
+    url: DATA_URL,
+    format: { type: "csv", parse: { acci_time: "date:'%d/%m/%Y %H:%M:%S'" } }
+  },
+  mark: { type: "line", point: true, interpolate: "monotone", strokeWidth: 2, opacity: 0.9 },
+  encoding: {
+    x: {
+      timeUnit: "hours",
+      field: "acci_time",
+      type: "ordinal",
+      title: "Hour of Day",
+      sort: [...Array(24).keys()],
+      axis: {
+        labelAngle: 0,
+        tickBand: "center",
+        values: [...Array(24).keys()],
+        labelExpr: "datum.label"
+      }
+    },
+    y: { aggregate: "count", title: "Number of Accidents" },
+    color: {
+      timeUnit: "day",
+      field: "acci_time",
+      type: "nominal",
+      title: "Day of Week",
+      scale: { scheme: "tableau10", domain: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"] },
+      legend: { orient: "right" }
+    },
+    tooltip: [
+      { aggregate: "count", title: "Accidents" },
+      { timeUnit: "day", field: "acci_time", type: "ordinal", title: "Day" },
+      { timeUnit: "hours", field: "acci_time", type: "ordinal", title: "Hour" }
+    ]
+  }
+};
+
+/* -------- Task 3: Graduated-symbol density over Dubai boundary -------- */
+const spec3 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  description: "Dubai traffic accidents, graduated symbols over Dubai boundary",
+  title: { text: "Accident Density Across Dubai", fontSize: 22, fontWeight: "bold", anchor: "start", offset: 16 },
+  width: 900,
+  height: 600,
+  projection: { type: "mercator", center: [55.27, 25.20], scale: 46000 },
+  layer: [
+    {
+      data: {
+        url: "https://raw.githubusercontent.com/saifsmm/part2/refs/heads/main/dubai_boundary.geojson",
+        format: { type: "geojson" }
+      },
+      mark: { type: "geoshape", fill: "#f4f4f4", stroke: "#c0c0c0" }
+    },
+    {
+      data: { url: DATA_URL, format: { type: "csv" } },
+      transform: [
+        { filter: "toNumber(datum.acci_y) > 23" },
+        { calculate: "toNumber(datum.acci_y)", as: "lon" },
+        { calculate: "toNumber(datum.acci_x)", as: "lat" },
+        { bin: { step: 0.008 }, field: "lon", as: ["lon_b","lon_e"] },
+        { bin: { step: 0.008 }, field: "lat", as: ["lat_b","lat_e"] },
+        { calculate: "(datum.lon_b + datum.lon_e)/2", as: "lon_mid" },
+        { calculate: "(datum.lat_b + datum.lat_e)/2", as: "lat_mid" },
+        { aggregate: [{ op: "count", as: "cnt" }], groupby: ["lon_mid","lat_mid"] }
+      ],
+      mark: { type: "circle", opacity: 0.2 },
+      encoding: {
+        longitude: { field: "lon_mid", type: "quantitative", title: "Longitude" },
+        latitude:  { field: "lat_mid", type: "quantitative", title: "Latitude" },
+        size: {
+          field: "cnt", type: "quantitative", title: "Number of Accidents",
+          scale: { range: [30, 1600] }, legend: { titleFontSize: 14, labelFontSize: 12 }
+        },
+        color: {
+          field: "cnt", type: "quantitative", title: "Accident Density",
+          scale: { scheme: "inferno" }, legend: { titleFontSize: 14, labelFontSize: 12 }
+        },
+        tooltip: [
+          { field: "cnt", title: "Number of Accidents" },
+          { field: "lon_mid", title: "Longitude" },
+          { field: "lat_mid", title: "Latitude" }
+        ]
+      }
+    }
+  ],
+  config: {
+    axis:   { labelFontSize: 12, titleFontSize: 14 },
+    legend: { orient: "right", titleFontSize: 14, labelFontSize: 12 }
+  }
+};
+
+vegaEmbed("#task1", spec1, { actions: false });
+vegaEmbed("#task2", spec2, { actions: false });
+vegaEmbed("#task3", spec3, { actions: false });
+</script>
+</body>
+</html>
