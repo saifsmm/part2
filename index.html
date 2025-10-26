@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dubai Traffic Incidents – Part 2</title>
+  <title>Dubai Traffic Incidents – CS318 Part 2</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
@@ -219,6 +219,7 @@
       align-items: center;
       gap: 16px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .viz-number {
@@ -249,6 +250,128 @@
       border-radius: 20px;
       font-size: 0.9rem;
       font-weight: 600;
+    }
+
+    /* Interactive Buttons */
+    .interactive-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .info-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .info-btn:active {
+      transform: translateY(0);
+    }
+
+    .info-btn.secondary {
+      background: #48bb78;
+    }
+
+    .info-btn.secondary:hover {
+      box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+    }
+
+    .info-btn.tertiary {
+      background: #ed8936;
+    }
+
+    .info-btn.tertiary:hover {
+      box-shadow: 0 6px 20px rgba(237, 137, 54, 0.4);
+    }
+
+    /* Info Panels */
+    .info-panel {
+      background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
+      border: 2px solid #667eea;
+      border-radius: 12px;
+      padding: 25px;
+      margin-top: 20px;
+      display: none;
+      animation: slideDown 0.4s ease-out;
+    }
+
+    .info-panel.active {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .info-panel h4 {
+      font-size: 1.3rem;
+      color: #1a202c;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-panel p {
+      color: #4a5568;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .info-panel ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 15px;
+    }
+
+    .info-panel li {
+      color: #2d3748;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      padding-left: 30px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .info-panel li::before {
+      content: '💡';
+      position: absolute;
+      left: 0;
+      font-size: 1.2rem;
+    }
+
+    .insight-panel {
+      background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%);
+      border: 2px solid #48bb78;
+    }
+
+    .howto-panel {
+      background: linear-gradient(135deg, #fff5e6 0%, #fef5e7 100%);
+      border: 2px solid #ed8936;
     }
 
     .viz-description {
@@ -310,6 +433,33 @@
       min-height: 400px;
     }
 
+    /* Key Insights Box */
+    .key-insights {
+      background: linear-gradient(135deg, #fff9e6 0%, #fffbf0 100%);
+      border-left: 5px solid #f6ad55;
+      padding: 20px 25px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+
+    .key-insights h4 {
+      font-size: 1.1rem;
+      color: #744210;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .key-insights p {
+      color: #975a16;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .key-insights strong {
+      color: #744210;
+    }
+
     /* Footer */
     .footer {
       text-align: center;
@@ -369,6 +519,15 @@
         grid-template-columns: 1fr;
         gap: 20px;
       }
+
+      .interactive-buttons {
+        flex-direction: column;
+      }
+
+      .info-btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -378,8 +537,8 @@
   <div class="hero">
     <div class="container">
       <h1>🚗 Dubai Traffic Incidents Analysis</h1>
-      <p class="subtitle">Comprehensive data visualization exploring traffic accident patterns, temporal trends, and geographic distribution across Dubai Emirate</p>
-      <div class="course-info"> • Part 2: Using Vega-Lite</div>
+      <p class="subtitle">A visual exploration of how traffic accidents happen ,when they occur, how often, and where they’re most common.</p>
+      <div class="course-info">CS318 Introduction to Data Visualization • Part 2: Vega-Lite</div>
     </div>
   </div>
 
@@ -408,7 +567,7 @@
       <!-- Section Header -->
       <div class="section-header">
         <h2>Interactive Visualizations</h2>
-        <p>Explore traffic incident data through three distinct visualization approaches, each revealing unique patterns and insights</p>
+        <p>traffic incident visiualization data with three distinct visualization approaches, each demonstrating unique patterns and insights</p>
       </div>
 
       <!-- Visualization 1 -->
@@ -418,23 +577,63 @@
             <div class="viz-title-row">
               <span class="viz-number">1</span>
               <h3>Accidents by Day of Week</h3>
-              <span class="task-badge">Task 1</span>
+              <span class="task-badge">Task 1 • 30%</span>
             </div>
             <p class="viz-description">
-              This bar chart visualizes the distribution of traffic accidents across different days of the week in Dubai. 
-              The visualization reveals weekly patterns, helping identify which days experience higher accident frequencies. 
-              Each bar is color-coded to distinguish between days, making it easy to compare accident counts at a glance.
+              This bar chart shows how traffic accidents in Dubai are spread across the days of the week. 
+               You can instantly see which days have more incidents just by looking at the height of the bars.  
+              The colors help separate each day so it’s easy to notice pattern like which day tends to be the busiest or the safest on the roads.
             </p>
-            <div class="viz-requirements">
-              <h4>📋 Assignment Requirements Met:</h4>
+
+            <div class="interactive-buttons">
+              <button class="info-btn" onclick="togglePanel('explanation1')">
+                <span>📚</span> How to Read This Chart
+              </button>
+              <button class="info-btn secondary" onclick="togglePanel('insights1')">
+                <span>🔍</span> Key Insights
+              </button>
+              <button class="info-btn tertiary" onclick="togglePanel('technical1')">
+                <span>⚙️</span> Technical Details
+              </button>
+            </div>
+
+            <div id="explanation1" class="info-panel howto-panel">
+              <h4>📖 How to Read This Visualization</h4>
+              <p><strong>What you're looking at:</strong> A bar chart where each bar represents one day of the week.</p>
               <ul>
-                <li>Bar chart showing accidents per day of week</li>
-                <li>Days properly ordered from Monday to Sunday</li>
-                <li>Color encoding to distinguish different days</li>
-                <li>Clear axis labels and proper scaling</li>
-                <li>Interactive tooltips showing exact counts</li>
+                <li><strong>X-Axis (Horizontal):</strong> Shows the days of the week from Monday to Sunday</li>
+                <li><strong>Y-Axis (Vertical):</strong> Shows the total number of accidents that occurred on that day</li>
+                <li><strong>Bar Heights:</strong> Taller bars = more accidents on that day</li>
+                <li><strong>Colors:</strong> Each day has a unique color to help you distinguish them quickly</li>
+                <li><strong>Hover over bars:</strong> Get exact accident counts for each day</li>
               </ul>
             </div>
+
+            <div id="insights1" class="info-panel insight-panel">
+              <h4>💡 What This Data Tells Us</h4>
+              <p>Looking at this chart, you can discover interesting patterns about when accidents happen:</p>
+              <ul>
+                <li><strong>Weekday vs Weekend:</strong> Compare accident rates between working days and weekends</li>
+                <li><strong>Peak Day:</strong> Identify which day has the highest accident rate</li>
+                <li><strong>Safest Day:</strong> Find which day tends to have fewer accidents</li>
+                <li><strong>Traffic Patterns:</strong> Higher bars might indicate days with heavier traffic or more commuters</li>
+                <li><strong>Planning Insight:</strong> This helps city planners know when to increase traffic enforcement</li>
+              </ul>
+            </div>
+
+            <div id="technical1" class="info-panel">
+              <h4>⚙️ Technical Implementation</h4>
+              <ul>
+                <li><strong>Mark Type:</strong> Bar chart for categorical comparison</li>
+                <li><strong>Data Processing:</strong> Parsed date/time field using '%d/%m/%Y %H:%M:%S' format</li>
+                <li><strong>Time Unit:</strong> Extracted day of week using Vega-Lite's timeUnit transform</li>
+                <li><strong>Sorting:</strong> Days ordered Monday through Sunday for logical flow</li>
+                <li><strong>Aggregation:</strong> Count of accidents grouped by day</li>
+                <li><strong>Encoding:</strong> Color scale distinguishes each day uniquely</li>
+              </ul>
+            </div>
+
+            
           </div>
           <div class="chart-container">
             <div id="task1" class="chart"><div class="loading"></div></div>
@@ -449,23 +648,65 @@
             <div class="viz-title-row">
               <span class="viz-number">2</span>
               <h3>Accidents by Hour, Colored by Weekday</h3>
-              <span class="task-badge">Task 2</span>
+              <span class="task-badge">Task 2 • 30%</span>
             </div>
             <p class="viz-description">
-              This multi-line chart reveals how accident frequency varies throughout the 24-hour day, with separate lines for 
-              each day of the week. The visualization exposes temporal patterns including rush hour peaks, late-night trends, 
-              and distinct differences between weekdays and weekends. The color-coded lines enable easy comparison across days.
+              This line chart tracks how often accidents happen during each hour of the day, with a different color line for every day of the week.
+              You can spot rush hour spikes, quiet early mornings, and the differences between weekdays and weekends.
+              It’s a simple way to see when Dubai’s roads tend to be busiest or safest throughout the day.
             </p>
-            <div class="viz-requirements">
-              <h4>📋 Assignment Requirements Met:</h4>
+
+            <div class="interactive-buttons">
+              <button class="info-btn" onclick="togglePanel('explanation2')">
+                <span>📚</span> How to Read This Chart
+              </button>
+              <button class="info-btn secondary" onclick="togglePanel('insights2')">
+                <span>🔍</span> Key Insights
+              </button>
+              <button class="info-btn tertiary" onclick="togglePanel('technical2')">
+                <span>⚙️</span> Technical Details
+              </button>
+            </div>
+
+            <div id="explanation2" class="info-panel howto-panel">
+              <h4>📖 How to Read This Visualization</h4>
+              <p><strong>What you're looking at:</strong> Multiple line charts overlaid on the same graph, one for each day of the week.</p>
               <ul>
-                <li>Line chart showing hourly accident distribution</li>
-                <li>All 24 hours included on x-axis (0-23)</li>
-                <li>Separate colored lines for each day of week</li>
-                <li>Clear temporal patterns visible</li>
-                <li>Interactive points with detailed tooltips</li>
+                <li><strong>X-Axis (Horizontal):</strong> Shows all 24 hours of the day (0 = midnight, 12 = noon, 23 = 11 PM)</li>
+                <li><strong>Y-Axis (Vertical):</strong> Shows the number of accidents that occurred at that hour</li>
+                <li><strong>Each Line:</strong> Represents one day of the week (see legend on the right)</li>
+                <li><strong>Line Height:</strong> Higher points = more accidents at that specific hour</li>
+                <li><strong>Peaks and Valleys:</strong> Show when accidents are most/least frequent during the day</li>
+                <li><strong>Hover over points:</strong> See exact hour, day, and accident count</li>
               </ul>
             </div>
+
+            <div id="insights2" class="info-panel insight-panel">
+              <h4>💡 What This Data Tells Us</h4>
+              <p>This chart reveals fascinating patterns about accident timing throughout the day:</p>
+              <ul>
+                <li><strong>Morning Rush Hour:</strong> Look for peaks around 7-9 AM when people commute to work</li>
+                <li><strong>Evening Rush Hour:</strong> Often shows higher accidents around 5-7 PM</li>
+                <li><strong>Lunch Time:</strong> Check if there's a spike around noon</li>
+                <li><strong>Late Night:</strong> Typically fewer accidents but possibly more severe ones</li>
+                <li><strong>Weekend Patterns:</strong> Compare weekend lines (Fri/Sat/Sun) vs weekday lines - different patterns?</li>
+                <li><strong>Safest Hours:</strong> Early morning hours (3-6 AM) usually show lowest accident rates</li>
+              </ul>
+            </div>
+
+            <div id="technical2" class="info-panel">
+              <h4>⚙️ Technical Implementation</h4>
+              <ul>
+                <li><strong>Mark Type:</strong> Line chart with point markers for precise values</li>
+                <li><strong>Interpolation:</strong> Monotone curve smoothing for natural flow</li>
+                <li><strong>Multi-series:</strong> Separate line for each day of week using color encoding</li>
+                <li><strong>Time Unit:</strong> Hours extracted from timestamp (0-23)</li>
+                <li><strong>Styling:</strong> Stroke width 2px, opacity 0.9 for clarity without overwhelming</li>
+                <li><strong>Color Scheme:</strong> Tableau10 palette for optimal distinction between 7 days</li>
+              </ul>
+            </div>
+
+            
           </div>
           <div class="chart-container">
             <div id="task2" class="chart"><div class="loading"></div></div>
@@ -480,25 +721,67 @@
             <div class="viz-title-row">
               <span class="viz-number">3</span>
               <h3>Accident Density Across Dubai</h3>
-              <span class="task-badge">Task 3</span>
+              <span class="task-badge">Task 3 • 40%</span>
             </div>
             <p class="viz-description">
-              This graduated symbol map displays the geographic distribution and density of traffic accidents throughout Dubai. 
-              Circles vary in both size and color intensity based on accident concentration, effectively highlighting high-risk 
-              zones and traffic hotspots. The map overlays accident data on Dubai's geographic boundary, providing crucial 
-              spatial context for urban planning and traffic safety analysis.
+              This graduated symbol visualization map highlights where accidents happen most often around Dubai.
+              Each circle shows a cluster of incidents the bigger and brighter it is, the more accidents occurred there. 
+              It’s an easy way to spot hotspots and understand which parts of the city see the most traffic problems or need extra safety measures.
             </p>
-            <div class="viz-requirements">
-              <h4>📋 Assignment Requirements Met:</h4>
+
+            <div class="interactive-buttons">
+              <button class="info-btn" onclick="togglePanel('explanation3')">
+                <span>📚</span> How to Read This Map
+              </button>
+              <button class="info-btn secondary" onclick="togglePanel('insights3')">
+                <span>🔍</span> Key Insights
+              </button>
+              <button class="info-btn tertiary" onclick="togglePanel('technical3')">
+                <span>⚙️</span> Technical Details
+              </button>
+            </div>
+
+            <div id="explanation3" class="info-panel howto-panel">
+              <h4>📖 How to Read This Visualization</h4>
+              <p><strong>What you're looking at:</strong> A geographic map of Dubai with circles showing where accidents occur.</p>
               <ul>
-                <li>Graduated symbol visualization with circle marks</li>
-                <li>Geographic coordinates properly mapped (longitude/latitude encoding)</li>
-                <li>Data filtered to exclude noise (acci_y > 23)</li>
-                <li>Circle opacity set to 0.2 for density visibility</li>
-                <li>Size and color scales represent accident frequency</li>
-                <li>Dubai boundary overlay for geographic context</li>
+                <li><strong>Map Background:</strong> Shows Dubai's geographic boundary in light gray</li>
+                <li><strong>Circle Size:</strong> Bigger circles = more accidents in that location</li>
+                <li><strong>Circle Color:</strong> Darker/brighter colors = higher accident density (see legend)</li>
+                <li><strong>Color Scale:</strong> Uses "inferno" scheme - darker red/yellow means more accidents</li>
+                <li><strong>Opacity:</strong> Circles are semi-transparent (20%) so you can see overlapping hotspots</li>
+                <li><strong>Hover over circles:</strong> See exact number of accidents and coordinates</li>
               </ul>
             </div>
+
+            <div id="insights3" class="info-panel insight-panel">
+              <h4>💡 What This Data Tells Us</h4>
+              <p>This map reveals critical information about where accidents happen in Dubai:</p>
+              <ul>
+                <li><strong>Hotspot Identification:</strong> Large, bright circles show the most dangerous areas</li>
+                <li><strong>Major Roads:</strong> Patterns often form along main highways and arterial roads</li>
+                <li><strong>Urban vs Suburban:</strong> Compare accident density between city center and outskirts</li>
+                <li><strong>Cluster Patterns:</strong> Multiple overlapping circles indicate consistent problem areas</li>
+                <li><strong>Safe Zones:</strong> Areas with no circles have few or no reported accidents</li>
+                <li><strong>Planning Value:</strong> Helps authorities decide where to add traffic lights, speed cameras, or road improvements</li>
+              </ul>
+            </div>
+
+            <div id="technical3" class="info-panel">
+              <h4>⚙️ Technical Implementation</h4>
+              <ul>
+                <li><strong>Projection:</strong> Mercator projection centered on Dubai (55.27°E, 25.20°N)</li>
+                <li><strong>Data Filtering:</strong> Applied filter "acci_y > 23" to remove noise/invalid coordinates</li>
+                <li><strong>Spatial Binning:</strong> Grouped nearby accidents using 0.008-degree grid bins</li>
+                <li><strong>Aggregation:</strong> Counted accidents per bin to calculate density</li>
+                <li><strong>Mark Type:</strong> Graduated symbols using circles with variable size and color</li>
+                <li><strong>Encoding:</strong> Longitude and latitude channels for geographic positioning</li>
+                <li><strong>Dual Encoding:</strong> Both size (30-1600 range) and color (inferno scheme) represent density</li>
+                <li><strong>Layering:</strong> Base layer (Dubai boundary) + data layer (accident circles)</li>
+              </ul>
+            </div>
+
+            
           </div>
           <div class="chart-container">
             <div id="task3" class="chart"><div class="loading"></div></div>
@@ -512,15 +795,31 @@
   <!-- Footer -->
   <div class="footer">
     <div class="container">
-      <p><strong>Done by Saif,Mohammed,Mohammed,Abdulaziz,Ali 
-</strong></p>
+      <p>CS318 Introduction to Data Visualization</p>
       <p>Assignment Part 2: Traffic Incident Analysis Using Vega-Lite</p>
-      <p class="copyright">Data Source: Dubai Emirate Traffic Incidents Dataset</p>
+      <p>Data Source: Dubai Emirate Traffic Incidents Dataset</p>
     </div>
   </div>
 
 <script>
 const DATA_URL = "https://raw.githubusercontent.com/sheriefAbdallah/CS318/refs/heads/main/Traffic_Incidents.csv";
+
+// Toggle info panels
+function togglePanel(panelId) {
+  const panel = document.getElementById(panelId);
+  const allPanels = document.querySelectorAll('.info-panel');
+  
+  // Close all other panels in the same section
+  const section = panel.closest('.viz-card');
+  section.querySelectorAll('.info-panel').forEach(p => {
+    if (p.id !== panelId) {
+      p.classList.remove('active');
+    }
+  });
+  
+  // Toggle the clicked panel
+  panel.classList.toggle('active');
+}
 
 /* -------- Task 1: Bar chart by weekday -------- */
 const spec1 = {
