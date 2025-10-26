@@ -808,12 +808,12 @@
 <script>
 const DATA_URL = "https://raw.githubusercontent.com/sheriefAbdallah/CS318/refs/heads/main/Traffic_Incidents.csv";
 
-// Toggle info panels
+
 function togglePanel(panelId) {
   const panel = document.getElementById(panelId);
   const allPanels = document.querySelectorAll('.info-panel');
   
-  // Close all other panels in the same section
+  
   const section = panel.closest('.viz-card');
   section.querySelectorAll('.info-panel').forEach(p => {
     if (p.id !== panelId) {
@@ -821,11 +821,11 @@ function togglePanel(panelId) {
     }
   });
   
-  // Toggle the clicked panel
+  
   panel.classList.toggle('active');
 }
 
-/* -------- Task 1: Bar chart by weekday -------- */
+/*task 1*/
 const spec1 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   description: "Accident distribution by day of the week",
@@ -860,7 +860,7 @@ const spec1 = {
   }
 };
 
-/* -------- Task 2: Line chart by hour, colored by weekday -------- */
+/* task 2 */
 const spec2 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   description: "Accident distribution by hour of day, colored by weekday",
@@ -902,7 +902,7 @@ const spec2 = {
   }
 };
 
-/* -------- Task 3: Graduated-symbol density over Dubai boundary -------- */
+/* task3 */
 const spec3 = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   description: "Dubai traffic accidents, graduated symbols over Dubai boundary",
@@ -962,4 +962,5 @@ vegaEmbed("#task3", spec3, { actions: false });
 </script>
 </body>
 </html>
+
 
